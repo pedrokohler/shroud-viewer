@@ -8,9 +8,9 @@
 
 **[https://pedrokohler.github.io/shroud-viewer/](https://pedrokohler.github.io/shroud-viewer/)**
 
-Preview image (social / Open Graph):
+Preview image (social / Open Graph — lightweight `og-share.jpg` on Pages):
 
-![Face detail preview](https://storage.googleapis.com/shroud_images/images/shroud-face-hires.jpg)
+![Face detail preview](https://pedrokohler.github.io/shroud-viewer/og-share.jpg)
 
 ## Features
 
@@ -32,7 +32,7 @@ flowchart LR
 
 | Layer | Host | Role |
 |-------|------|------|
-| App shell | GitHub Pages (`pedrokohler.github.io/shroud-viewer`) | `index.html`, `styles.css`, `app.js` |
+| App shell | GitHub Pages (`pedrokohler.github.io/shroud-viewer`) | `index.html`, `styles.css`, `app.js`, `og-share.jpg` |
 | Media | GCS bucket `shroud_images` | Deep-zoom tiles (`tiles/`) and gallery thumbnails (`images/`) |
 
 ## Image sources
@@ -41,21 +41,27 @@ Photographs from **[Wikimedia Commons — Shroud of Turin](https://commons.wikim
 
 ## Local development
 
-1. **Optional:** Generate DZI tiles (Python 3 + Pillow):
+1. **Optional:** Regenerate the social preview image (needs `images/shroud-face-hires.jpg`):
+
+   ```bash
+   python3 scripts/build_og_share.py
+   ```
+
+2. **Optional:** Generate DZI tiles (Python 3 + Pillow):
 
    ```bash
    python3 generate_tiles.py
    ```
 
-2. Point `ASSET_BASE` in `app.js` at your own bucket or use `file://` / relative paths if you serve `tiles/` and `images/` locally.
+3. Point `ASSET_BASE` in `app.js` at your own bucket or use `file://` / relative paths if you serve `tiles/` and `images/` locally.
 
-3. Serve the project root:
+4. Serve the project root:
 
    ```bash
    python3 -m http.server 8080
    ```
 
-4. Open [http://localhost:8080](http://localhost:8080)
+5. Open [http://localhost:8080](http://localhost:8080)
 
 > The published site loads tiles from `https://storage.googleapis.com/shroud_images/` by default.
 
