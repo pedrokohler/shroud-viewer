@@ -42,6 +42,26 @@ a:hover {
   text-decoration: underline;
 }
 
+/* No-JS crawlable fallback */
+.noscript-fallback {
+  max-width: 40rem;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.noscript-fallback h1 {
+  color: var(--text-primary);
+  font-size: 1.35rem;
+  margin-bottom: 1rem;
+}
+.noscript-fallback p {
+  margin-bottom: 1rem;
+}
+
 /* Header */
 #app-header {
   height: var(--header-height);
@@ -390,10 +410,10 @@ a:hover {
   background: rgba(201, 169, 110, 0.1) !important;
 }
 
-/* Responsive */
+/* Responsive: sidebar overlay on narrow viewports */
 @media (max-width: 768px) {
   :root {
-    --sidebar-width: 240px;
+    --sidebar-width: min(100vw, 300px);
   }
   .header-left h1 {
     font-size: 14px;
@@ -401,24 +421,33 @@ a:hover {
   .subtitle {
     display: none;
   }
+  #app-main {
+    position: relative;
+  }
+  #sidebar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 50;
+    width: var(--sidebar-width);
+    min-width: unset;
+    max-width: 100%;
+    height: 100%;
+    box-shadow: 8px 0 24px rgba(0, 0, 0, 0.45);
+    border-right: 1px solid var(--border);
+  }
+  #sidebar.closed {
+    display: none;
+  }
+  #viewer-container {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+  }
   #minimap {
     width: 120px;
     height: 90px;
     bottom: 10px;
     right: 10px;
-  }
-}
-
-@media (max-width: 480px) {
-  :root {
-    --sidebar-width: 100vw;
-  }
-  #sidebar {
-    position: absolute;
-    z-index: 50;
-    height: calc(100vh - var(--header-height));
-  }
-  #sidebar.closed {
-    display: none;
   }
 }

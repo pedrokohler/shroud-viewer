@@ -3,15 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shroud of Turin — Deep Zoom Viewer</title>
-  <meta name="description" content="Explore high-resolution images of the Shroud of Turin with deep zoom, image filters, and comparison tools.">
+  <title>Shroud of Turin Deep Zoom Viewer — Explore High-Resolution Images Online</title>
+  <meta name="description" content="Free interactive deep-zoom viewer for the Shroud of Turin. Pan and zoom high-resolution photographs: 2002 restoration, Secondo Pia 1898, Giuseppe Enrie 1931, face detail, negatives, and more. OpenSeadragon.">
+  <meta name="keywords" content="Shroud of Turin, Turin Shroud, deep zoom, high resolution, Secondo Pia, Giuseppe Enrie, sindonology, Holy Shroud, OpenSeadragon, interactive viewer">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Pedro Kohler">
+  <meta name="theme-color" content="#0e0e10">
+
+  <link rel="canonical" href="https://pedrokohler.github.io/shroud-viewer/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Shroud of Turin Deep Zoom Viewer">
+  <meta property="og:title" content="Shroud of Turin — Deep Zoom Viewer">
+  <meta property="og:description" content="Explore high-resolution Shroud of Turin photographs with smooth deep zoom, filters, and multiple historical images. Free in your browser.">
+  <meta property="og:url" content="https://pedrokohler.github.io/shroud-viewer/">
+  <meta property="og:image" content="https://storage.googleapis.com/shroud_images/images/shroud-face-hires.jpg">
+  <meta property="og:image:alt" content="Face detail on the Shroud of Turin">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Shroud of Turin — Deep Zoom Viewer">
+  <meta name="twitter:description" content="Explore high-resolution Shroud of Turin photographs with deep zoom and filters in your browser.">
+  <meta name="twitter:image" content="https://storage.googleapis.com/shroud_images/images/shroud-face-hires.jpg">
+
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/openseadragon@5.0.1/build/openseadragon/openseadragon.min.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Shroud of Turin Deep Zoom Viewer",
+    "description": "Interactive browser viewer for high-resolution photographs of the Shroud of Turin with deep zoom, image filters, and multiple historical sources.",
+    "url": "https://pedrokohler.github.io/shroud-viewer/",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Pedro Kohler" },
+    "isAccessibleForFree": true
+  }
+  </script>
+
+  <script data-goatcounter="https://pedrokohler.goatcounter.com/count"
+          async src="https://gc.zgo.at/count.js"></script>
 </head>
 <body>
+  <noscript>
+    <div class="noscript-fallback">
+      <h1>Shroud of Turin — Deep Zoom Viewer</h1>
+      <p>This site is an interactive deep-zoom image viewer. <strong>JavaScript is required</strong> to explore the photographs.</p>
+      <p>The Shroud of Turin is a linen cloth bearing the faint image of a man; this viewer includes high-resolution images from Wikimedia Commons (public domain / CC BY), including the 2002 restoration photograph, Secondo Pia (1898), Giuseppe Enrie (1931), face detail, and negative comparisons.</p>
+      <p><a href="https://github.com/pedrokohler/shroud-viewer">Source code on GitHub</a></p>
+    </div>
+  </noscript>
   <header id="app-header">
     <div class="header-left">
       <h1>Shroud of Turin</h1>

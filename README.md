@@ -1,30 +1,90 @@
 # Shroud of Turin — Deep Zoom Viewer
 
-Interactive deep-zoom viewer for high-resolution Shroud of Turin imagery, built with [OpenSeadragon](https://openseadragon.github.io/).
+**Explore the Holy Shroud in your browser** with smooth deep zoom, pan, image filters, and eight high-resolution photographs—including the 2002 restoration scan, Secondo Pia (1898), Giuseppe Enrie (1931), face detail, and negative comparisons.
+
+[![Live demo](https://img.shields.io/badge/demo-GitHub%20Pages-24292f?logo=github)](https://pedrokohler.github.io/shroud-viewer/)
 
 ## Live site
 
-**GitHub Pages:** [https://pedrokohler.github.io/shroud-viewer/](https://pedrokohler.github.io/shroud-viewer/)
+**[https://pedrokohler.github.io/shroud-viewer/](https://pedrokohler.github.io/shroud-viewer/)**
 
-Deep-zoom tiles and gallery thumbnails are served from Google Cloud Storage (`storage.googleapis.com/shroud_images`).
+Preview image (social / Open Graph):
 
-## Local development
+![Face detail preview](https://storage.googleapis.com/shroud_images/images/shroud-face-hires.jpg)
 
-1. Generate tiles (requires Python 3 + Pillow): `python3 generate_tiles.py`
-2. Serve the folder: `python3 -m http.server 8080`
-3. Open `http://localhost:8080`
+## Features
+
+- **Deep zoom** — [OpenSeadragon](https://openseadragon.github.io/) with tiled imagery (DZI) for fast pan and zoom
+- **Eight curated views** — Full-length restoration, Enrie, Pia, face detail, neg/pos comparison, negatives, and more
+- **Image filters** — Brightness, contrast, saturation, invert, grayscale
+- **Navigation** — Zoom buttons, home, rotation, minimap, fullscreen
+- **Keyboard shortcuts** — `+`/`-` zoom, `f` fullscreen, `h` home, `s` sidebar, `n` invert, `r` / `R` rotate
+- **Mobile-friendly** — On narrow screens the sidebar starts closed so the viewer fills the screen; use the menu button to open controls
+- **Privacy-friendly analytics** — [GoatCounter](https://www.goatcounter.com/) (no cookies)
+
+## Architecture
+
+```mermaid
+flowchart LR
+  Pages[GitHub_Pages] -->|"HTML_CSS_JS"| Browser[Browser]
+  GCS[Google_Cloud_Storage] -->|"DZI_tiles_JPEG"| Browser
+```
+
+| Layer | Host | Role |
+|-------|------|------|
+| App shell | GitHub Pages (`pedrokohler.github.io/shroud-viewer`) | `index.html`, `styles.css`, `app.js` |
+| Media | GCS bucket `shroud_images` | Deep-zoom tiles (`tiles/`) and gallery thumbnails (`images/`) |
 
 ## Image sources
 
-Photographs from [Wikimedia Commons — Shroud of Turin](https://commons.wikimedia.org/wiki/Category:Shroud_of_Turin) (public domain / CC BY 4.0).
+Photographs from **[Wikimedia Commons — Shroud of Turin](https://commons.wikimedia.org/wiki/Category:Shroud_of_Turin)** (public domain / CC BY 4.0 where applicable). See the in-app About section for links.
 
-## GCS deployment
+## Local development
 
-- Bucket: `gs://shroud_images`
-- CORS: see `cors.json` (allows `https://pedrokohler.github.io` and localhost)
-- Public read: `roles/storage.objectViewer` for `allUsers`
+1. **Optional:** Generate DZI tiles (Python 3 + Pillow):
+
+   ```bash
+   python3 generate_tiles.py
+   ```
+
+2. Point `ASSET_BASE` in `app.js` at your own bucket or use `file://` / relative paths if you serve `tiles/` and `images/` locally.
+
+3. Serve the project root:
+
+   ```bash
+   python3 -m http.server 8080
+   ```
+
+4. Open [http://localhost:8080](http://localhost:8080)
+
+> The published site loads tiles from `https://storage.googleapis.com/shroud_images/` by default.
+
+## Deploying media to Google Cloud Storage
+
+- **Bucket:** `gs://shroud_images`
+- **Public read:** `roles/storage.objectViewer` for `allUsers`
+- **CORS:** See [`cors.json`](cors.json) (allows GitHub Pages and localhost)
+- **Cache:** Tile JPEGs use long `Cache-Control` for browser caching. After uploading new objects, re-apply metadata:
+
+```bash
+gsutil -m setmeta -h "Cache-Control:public, max-age=31536000, immutable" 'gs://shroud_images/tiles/**/*.jpg'
+gsutil -m setmeta -h "Cache-Control:public, max-age=86400" -h "Content-Type:application/xml" 'gs://shroud_images/tiles/*.dzi'
+gsutil -m setmeta -h "Cache-Control:public, max-age=31536000, immutable" 'gs://shroud_images/images/*.jpg'
+```
 
 ```bash
 gcloud storage cp -r tiles/ gs://shroud_images/tiles/
 gcloud storage cp -r images/ gs://shroud_images/images/
 ```
+
+## GitHub Pages
+
+The `main` branch is published from the repository root. After pushing, the site updates within a few minutes.
+
+## License
+
+App code: use per your preference (repository is public). **Image rights** remain with their respective Wikimedia Commons licenses; do not imply endorsement by the Archdiocese of Turin or Commons contributors.
+
+## Author
+
+[Pedro Kohler](https://github.com/pedrokohler) — built for education and research.

@@ -60,10 +60,58 @@ const IMAGES = [
   },
 ];
 
+const MOBILE_BREAKPOINT = 768;
+
 let viewer = null;
 let currentImageId = null;
 let rotation = 0;
 let zoomDisplayRafId = null;
+let wasMobileViewport = null;
+
+/** Privacy-friendly analytics (GoatCounter). */
+function trackGoat(path, title) {
+  if (typeof window.goatcounter !== "undefined" && window.goatcounter.count) {
+    window.goatcounter.count({ path, title: title || path });
+  }
+}
+
+function initSidebarForViewport() {
+  const sidebar = document.getElementById("sidebar");
+  const mobile = window.innerWidth <= MOBILE_BREAKPOINT;
+  if (mobile) {
+    sidebar.classList.add("closed");
+    sidebar.classList.remove("open");
+  } else {
+    sidebar.classList.remove("closed");
+    sidebar.classList.add("open");
+  }
+  wasMobileViewport = mobile;
+}
+
+function syncSidebarOnResize() {
+  const mobile = window.innerWidth <= MOBILE_BREAKPOINT;
+  if (mobile === wasMobileViewport) return;
+  const sidebar = document.getElementById("sidebar");
+  if (mobile) {
+    sidebar.classList.add("closed");
+    sidebar.classList.remove("open");
+  } else {
+    sidebar.classList.remove("closed");
+    sidebar.classList.add("open");
+  }
+  wasMobileViewport = mobile;
+  if (viewer) {
+    requestAnimationFrame(() => viewer.forceResize());
+  }
+}
+
+function debounce(fn, ms) {
+  let t;
+  return function () {
+    clearTimeout(t);
+    t = setTimeout(fn, ms);
+  };
+}
 
 function initViewer() {
   viewer = OpenSeadragon({
@@ -132,6 +180,7 @@ function loadImage(imageId) {
   });
 
   viewer.open(img.dzi);
+  trackGoat("/event/image/" + imageId, "Image: " + img.title);
 }
 
 function buildGallery() {
@@ -204,11 +253,23 @@ function setupFilterListeners() {
       display.textContent = input.value + "%";
       applyFilters();
     });
+    input.addEventListener("change", () => {
+      trackGoat("/event/filter/" + name, "Filter: " + name);
+    });
   });
 
-  document.getElementById("filter-invert").addEventListener("change", applyFilters);
-  document.getElementById("filter-grayscale").addEventListener("change", applyFilters);
-  document.getElementById("btn-reset-filters").addEventListener("click", resetFilters);
+  document.getElementById("filter-invert").addEventListener("change", () => {
+    applyFilters();
+    trackGoat("/event/filter/invert", "Filter: invert");
+  });
+  document.getElementById("filter-grayscale").addEventListener("change", () => {
+    applyFilters();
+    trackGoat("/event/filter/grayscale", "Filter: grayscale");
+  });
+  document.getElementById("btn-reset-filters").addEventListener("click", () => {
+    resetFilters();
+    trackGoat("/event/filter/reset", "Filter: reset");
+  });
 }
 
 function setupNavControls() {
@@ -299,6 +360,7 @@ function setupKeyboard() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  initSidebarForViewport();
   buildGallery();
   initViewer();
   setupFilterListeners();
@@ -306,4 +368,5 @@ document.addEventListener("DOMContentLoaded", () => {
   setupSidebar();
   setupFullscreen();
   setupKeyboard();
+  window.addEventListener("resize", debounce(syncSidebarOnResize, 150));
 });
